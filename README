@@ -1,9 +1,8 @@
 
-So the cortex-m22 parts are now available.  I have been waiting for
-a while now.  Looks like I am way ahead of the curve on this hopefully
-things will catch up.  binutils/gcc dont appear to support this
-core nor architecture yet so I hope I dont run into problems as the
-cortex-m22 is in some ways a reduced cortex-m0+.
+So the cortex-m22 parts are now available.
+
+At the moment binutils/gcc have not caught up so hopefully wont get
+stuck with undefined instructions.
 
 I started with the SAML10_FP32.kicad_pcb and each of these parts.
 
@@ -11,95 +10,6 @@ ATSAML10E16A-AU
 ATSAML11E16A-AU
 
 Note I am in no way claiming to be a pro board designer, this is
-on the very edge of minimal, it did happen to work for me.
+on the very edge of minimal, it does happen to work for me.
 
-I dont think the SSOP parts were available when I first found these
-but are now, a board for those will come later.  Both of these parts
-fit on this board.
-
-I was initially unable to get the L11 part working and at this time
-have not succeeded but with some L10 success, who knows.  The main
-difference is the L11 has a secure mode and/or is more secure.
-
-As far as blinking leds and such these share the same documentation
-and address space.  When I get the L11 working I will know more about
-anything additional required per example.
-
-Now the rate at which I have been ripped off with ebay perchases from
-Asia has greatly increased, but if you search for
-jlink swd stm32
-You will hopefully find some purple boards that have a mini b usb
-connector on one end. four pins sticking out the other, say RUN
-on the top and TVCC/GND/SWDCLK/SWDIO on the lower right.  Around
-$6 or so.  Good stuff, buy a few and put them in your toolbox.
-Then search for
-f/f jumper wires
-Four a couple of bucks you can get 40 of these on ebay
-
-I build my boards at oshpark.  Parts at mouser and hand solder
-them myself. YMMV
-
-Another path for SWD is to get a Nucleo boards, one with a top
-that looks like you can break it off.  Remove two jumpers and you can
-use the top of that board as a generic SWD debugger for cortex-m
-cores.  You will need one of the stlink...cfg files from openocd
-have to experiment to figure out which version stlink you have with
-which board.  ST has a JAVA based firmware update tool for these
-boards so on Linux/Windows/MacOS you can update the stlink end of the
-board and I think when you do that it shows you what flavor/version it
-is.
-
-Now my first struggle was getting an openocd config file, interestingly
-I was not able to get 0.10.0 to work but 0.9.0 worked and that is very
-strange.
-
-openocd -f jlink.cfg -f target.cfg
-
-The target.cfg file is simply cleaned up from an existing cortex-m based
-one/set from the openocd release.  I dont know when Microchip will
-add/create one.
-
-Likewise if and when there will be support within openocd for flashing.
-
-Here is my generic take on this, if the tool supports it, great, if
-it doesnt and the part supports in application programming in some
-form, great, if the part has some other interface like a burned in
-bootloader or some spi or i2c or other interface, great can use that.
-But if you have support for in application programming and a debugger
-that can load and run programs in SRAM, you are good enough to get
-started.
-
-Back in the early flash days when they were parallel parts from intel
-they all programmed the same way and all you needed to know was the
-base address in the processors memory space, so any/all debuggers
-could support flash programming.  But now each part vendor and often
-families within the part vendor do not use the same flash controller
-so you would have to write, in the debugger itself, or through
-the debugger, a part specific programmer.  While possible esp with
-openocd as you can telnet in with a program.  Ponder this.  Write a
-program that is linked with data that is the program you want to flash.
-So I write an led blinker program linked for the flash, I write an
-in application flash programmer program that is linked to run in RAM
-that contains as data the led blinker program.  The latter program
-burns the former into flash.  This will work with ANY debugger and
-version that you are able to get into the part and load programs into
-sram.  One solution works everywhere.  And naturally the second approach
-is to write a bootloader, now you can load the bootloader into ram
-if/when you want it then come through uart or whatever to change the
-flash or you can use one of these solutions to program the bootloader
-into flash then from there load applications into a separate section
-of flash.
-
-You will see one or more of these solutions in these examples.
-
-See the README files in the next level directories for more.
-
-You will want to get a gnu based cross compiler, I havea  build_gcc
-repo that I save my build scripts to build my own, but there are a
-number of pre-builts available, and my programs dont care about
-arm-whatever-linux-whatever from arm-whatever-eabi-whatever, etc.
-Either will work.
-
-As of this writing the gnu tools do not support the cortex-m22 so I/we
-may run into problems until such time as they do.  Will see how it
-goes.
+Have some SSOP parts will build a board for those next.

@@ -1,0 +1,26 @@
+
+These examples are specific to the
+
+ATSAML10E16A-AU
+
+for now, will try the SSOP soon.
+
+So far there is little to no support for this part or the cortex-m22
+
+I found that openocd 0.10.0 with the configs that work on other
+cortex-ms didnt work, but openocd 0.9.0 does.
+
+
+openocd -f jlink.cfg -f target.cfg
+
+
+telnet localhost 4444
+
+halt
+load_image blinker01/blinker01.sram.elf
+resume 0x20000000
+
+
+halt
+load_image flash01/flash01.sram.elf
+resume 0x20000000
