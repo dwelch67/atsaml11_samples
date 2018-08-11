@@ -1,0 +1,9 @@
+
+Much of this is covered in above READMEs.  The documentaition for
+this part family talks about the steps to take to erase and write
+to the flash.  This follows those simple steps.
+
+This part family, esp the L11, are interested in security, this
+program worked/works with a new part that has not had any protections
+enabled.  It may require work later or a new example that deals with
+said protections will be created.
