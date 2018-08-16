@@ -47,7 +47,6 @@ int notmain ( void )
     {
         PUT32(NVM_ADDR,addr);
         flash_command(FLASH_ER); //erase row
-        flash_busy();
     }
 
 if(1)
