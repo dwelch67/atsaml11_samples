@@ -1,0 +1,255 @@
+
+These examples are specific to the
+
+ATSAML10E16A-AU
+
+for now, will try the SSOP soon.
+
+So far there is little to no support for this part or the cortex-m22
+
+I found that openocd 0.10.0 with the configs that work on other
+cortex-ms didnt work, but openocd 0.9.0 does.
+
+
+openocd -f jlink.cfg -f target.cfg
+
+in a second window
+
+telnet localhost 4444
+
+
+
+mdw 0x804000 0x40
+
+0x00804000: b08f437f fffff8bb fff8c0ff ffffffff 00000000 00000000 00000000 8433651e
+0x00804020: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x00804040: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x00804060: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x00804080: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x008040a0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x008040c0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x008040e0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+
+
+0x00804000: 7f 43 8f b0 bb f8 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84
+0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+
+So some of these bits/bytes may be chip specific, calibrated so you
+want to use your own data
+
+dump_image urow.bin 0x804000 0x40
+
+use the free.c program in this directory
+
+./free urow.bin
+
+mww 0x4100501C 0x804000
+mwh 0x41005000 0xA502
+
+wait here for it to erase
+
+mdw 0x804000 0x40
+mdb 0x804000 0x40
+
+should be all 0xFFs to indicate erased
+
+mww 0x804000 0xB08F437F
+mww 0x804004 0xFFFFE0BB
+mww 0x804008 0xFFF8C0FF
+mww 0x80400C 0xFFFFFFFF
+mww 0x804010 0x00000000
+mww 0x804014 0x00000000
+mww 0x804018 0x00000000
+mww 0x80401C 0x8433651E
+mww 0x804020 0xFFFFFFFF
+mww 0x804024 0xFFFFFFFF
+mww 0x804028 0xFFFFFFFF
+mww 0x80402C 0xFFFFFFFF
+mww 0x804030 0xFFFFFFFF
+mww 0x804034 0xFFFFFFFF
+mww 0x804038 0xFFFFFFFF
+mww 0x80403C 0xFFFFFFFF
+
+
+mww 0x4100501C 0x804000
+mwh 0x41005000 0xA504
+
+wait here for it to write
+
+mdw 0x804000 0x40
+mdb 0x804000 0x40
+
+This now shows the modified byte is in there
+
+
+> mdw 0x804000 0x40
+0x00804000: b08f437f ffffe0bb fff8c0ff ffffffff 00000000 00000000 00000000 8433651e
+0x00804020: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x00804040: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x00804060: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x00804080: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x008040a0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x008040c0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+0x008040e0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+> mdb 0x804000 0x40
+0x00804000: 7f 43 8f b0 bb e0 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84
+0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>
+
+
+byte 5 bits 3 and 4 are zeroed to allow for sram and dram execution.
+
+0x00804000: 7f 43 8f b0 bb f8 ff
+0x00804000: 7f 43 8f b0 bb e0 ff
+
+You have to reset or power cycle for these changes to take effect.
+
+> reset
+atsaml11.cpu -- clearing lockup after double fault
+target state: halted
+target halted due to debug-request, current mode: Handler HardFault
+xPSR: 0x01000003 pc: 0xeffffffe msp: 0xffffffd8
+Polling target atsaml11.cpu failed, trying to reexamine
+atsaml11.cpu: hardware has 4 breakpoints, 2 watchpoints
+>
+
+
+00000000 <reset>:
+   0:   3001        adds    r0, #1
+   2:   3901        subs    r1, #1
+   4:   46c0        nop         ; (mov r8, r8)
+   6:   e7fb        b.n 0 <reset>
+
+halt
+reg 0 0
+reg 1 0
+mwh 0x20000000 0x3001
+mwh 0x20000002 0x3901
+mwh 0x20000004 0x46c0
+mwh 0x20000006 0xe7fb
+resume 0x20000000
+halt
+reg 0
+reg 1
+resume 0x20000000
+halt
+reg 0
+reg 1
+resume 0x20000000
+halt
+reg 0
+reg 1
+
+
+> halt
+> reg 0 0
+r0 (/32): 0x00000000
+> reg 1 0
+r1 (/32): 0x00000000
+> mwh 0x20000000 0x3001
+> mwh 0x20000002 0x3901
+> mwh 0x20000004 0x46c0
+> mwh 0x20000006 0xe7fb
+> resume 0x20000000
+> halt
+target state: halted
+target halted due to debug-request, current mode: Handler HardFault
+xPSR: 0xa1000003 pc: 0x20000000 msp: 0x00010a74
+> reg 0
+r0 (/32): 0x000025AA
+> reg 1
+r1 (/32): 0xFFFFDA56
+> resume 0x20000000
+> halt
+target state: halted
+target halted due to debug-request, current mode: Handler HardFault
+xPSR: 0xa1000003 pc: 0x20000000 msp: 0x00010a74
+> reg 0
+r0 (/32): 0x00004B57
+> reg 1
+r1 (/32): 0xFFFFB4A9
+> resume 0x20000000
+> halt
+target state: halted
+target halted due to debug-request, current mode: Handler HardFault
+xPSR: 0xa1000003 pc: 0x20000000 msp: 0x00010a74
+> reg 0
+r0 (/32): 0x00007101
+> reg 1
+r1 (/32): 0xFFFF8EFF
+>
+>
+
+so thats running code out of ram!!!
+
+
+build flash01
+
+run it
+
+halt
+load_image flash01/flash01.sram.elf
+resume 0x20000000
+
+wait a little bit
+
+> halt
+> reset
+> halt
+target state: halted
+target halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x00000046 msp: 0x20001000
+
+needs to say Thread ahd the pc needs to be 0x00000xxxx
+
+> mdw 0x20000100
+0x20000100: 000b584b
+> resume
+> halt
+target state: halted
+target halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x00000046 msp: 0x20001000
+> mdw 0x20000100
+0x20000100: 001a58bc
+> resume
+> halt
+target state: halted
+target halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x00000046 msp: 0x20001000
+> mdw 0x20000100
+0x20000100: 002312b1
+>
+
+flash.s in the flash01/next directory which is the flash-bin program
+in the flash01 directory.
+
+.thumb_func
+reset:
+    ldr r0,=0x20000100
+    mov r1,#0
+top:
+    str r1,[r0]
+    add r1,#1
+    b top
+
+So we can now program the flash and run a program in flash.  This was
+non-trivial took a while to figure all of this out, gave up once or
+twice.  Bricked one chip, may have hosed the board trying to replace
+the chip, it no longer shows up on swd.
+
+
+halt
+load_image blinker01/blinker01.sram.elf
+resume 0x20000000
+
+Both the flash controller and port controller have secure and
+non-secure base addresses.  flash01 and blinker01 at this point only
+work with the secure addresses.
+
+//#define PORTBASE 0x40003000
+#define PORTBASE 0x40003200
+
+//#define NVMCTRL_BASE 0x41004000
+#define NVMCTRL_BASE 0x41005000
+
+
