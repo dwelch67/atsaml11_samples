@@ -254,3 +254,52 @@ work with the secure addresses.
 #define NVMCTRL_BASE 0x41005000
 
 
+
+SAU_CTRL register
+
+ATSAML10 (less/no security features)
+
+> mdw 0xe000edd0
+0xe000edd0: 00000000 
+
+ATSAML11 (with security features)
+
+> mdw 0xe000edd0
+0xe000edd0: 00000002 
+
+ID_PFR1  this is supposed to read as 0x200 or 0x210 for secure or not
+but on the L10
+
+> mdw 0xe000ed44
+0xe000ed44: 00000000 
+> mdw 0xe002ed44
+0xe002ed44: 00000000 
+> 
+
+L11 I must be looking at something wrong.
+
+> mdw 0xe000ed44
+0xe000ed44: 00000000 
+> mdw 0xe002ed44
+0xe002ed44: 00000000 
+> 
+
+
+
+UROW between l11 and l10, some of these bytes are calibration values
+supposedly but I see the same set from a new l10 and a new unmodified
+l11 part. YMMV.  
+
+L10
+
+> mdb 0x804000 0x40
+0x00804000: 7f 43 8f b0 bb f8 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84 
+0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+> 
+
+L11
+
+> mdb 0x804000 0x40
+0x00804000: 7f 43 8f b0 bb e0 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84
+0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>
