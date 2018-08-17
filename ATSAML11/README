@@ -30,6 +30,7 @@ mdw 0x804000 0x40
 0x008040c0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
 0x008040e0: ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff
 
+mdb 0x804000 0x40
 
 0x00804000: 7f 43 8f b0 bb f8 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84
 0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff

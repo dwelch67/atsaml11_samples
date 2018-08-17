@@ -28,3 +28,12 @@ int notmain ( void )
     }
     return(0);
 }
+/*
+
+
+halt
+load_image blinker01/blinker01.sram.elf
+resume 0x20000000
+
+
+*/
