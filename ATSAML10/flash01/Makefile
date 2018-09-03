@@ -3,6 +3,7 @@ ARMGNU = arm-none-eabi
 #ARMGNU = arm-linux-gnueabi
 
 xMCPU = -mcpu=cortex-m22
+MCPU = -mcpu=cortex-m0
 AOPS = --warn --fatal-warnings $(MCPU)
 COPS = -Wall -Werror -O2 -nostdlib -nostartfiles -ffreestanding $(MCPU)
 
