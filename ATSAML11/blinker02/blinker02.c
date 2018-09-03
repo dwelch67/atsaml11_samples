@@ -35,8 +35,6 @@ int delay ( unsigned int n )
 
 int notmain ( void )
 {
-    unsigned int ra;
-    unsigned int rx;
 
     PUT32(PORTADIRSET,1<<15);
     PUT32(PORTADIRSET,1<<16);
@@ -46,7 +44,7 @@ int notmain ( void )
     PUT32(STK_CVR,0x00000000);
     PUT32(STK_CSR,5);
 
-    for(rx=0;;rx++)
+    while(1)
     {
         PUT32(PORTAOUTSET,1<<15);
         PUT32(PORTAOUTSET,1<<16);

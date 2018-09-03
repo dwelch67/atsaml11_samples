@@ -2,7 +2,7 @@
 ARMGNU = arm-none-eabi
 #ARMGNU = arm-linux-gnueabi
 
-xARCH = -mcpu=cortex-m0
+ARCH = -mcpu=cortex-m0
 xAOPS = --warn --fatal-warnings $(ARCH)
 AOPS = --warn $(ARCH)
 xCOPS = -Wall -Werror -O2 -nostdlib -nostartfiles -ffreestanding $(ARCH)

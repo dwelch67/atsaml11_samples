@@ -1,9 +1,9 @@
 
 These examples are specific to the
 
-ATSAML10E16A-AU
+ATSAML11E16A-AU LQFP
 
-for now, will try the SSOP soon.
+ATSAML11D15A-AU SSOP
 
 So far there is little to no support for this part or the cortex-m22
 
@@ -260,42 +260,42 @@ SAU_CTRL register
 ATSAML10 (less/no security features)
 
 > mdw 0xe000edd0
-0xe000edd0: 00000000 
+0xe000edd0: 00000000
 
 ATSAML11 (with security features)
 
 > mdw 0xe000edd0
-0xe000edd0: 00000002 
+0xe000edd0: 00000002
 
 ID_PFR1  this is supposed to read as 0x200 or 0x210 for secure or not
 but on the L10
 
 > mdw 0xe000ed44
-0xe000ed44: 00000000 
+0xe000ed44: 00000000
 > mdw 0xe002ed44
-0xe002ed44: 00000000 
-> 
+0xe002ed44: 00000000
+>
 
 L11 I must be looking at something wrong.
 
 > mdw 0xe000ed44
-0xe000ed44: 00000000 
+0xe000ed44: 00000000
 > mdw 0xe002ed44
-0xe002ed44: 00000000 
-> 
+0xe002ed44: 00000000
+>
 
 
 
 UROW between l11 and l10, some of these bytes are calibration values
 supposedly but I see the same set from a new l10 and a new unmodified
-l11 part. YMMV.  
+l11 part. YMMV.
 
 L10
 
 > mdb 0x804000 0x40
-0x00804000: 7f 43 8f b0 bb f8 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84 
-0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-> 
+0x00804000: 7f 43 8f b0 bb f8 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84
+0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>
 
 L11
 
@@ -303,3 +303,26 @@ L11
 0x00804000: 7f 43 8f b0 bb e0 ff ff ff c0 f8 ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 1e 65 33 84
 0x00804020: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
 >
+
+CPUID register
+
+0x411CD200
+0b1100 Armv8-M architecture without Main Extension.
+
+A PE with the Main Extension is also referred to as a Mainline
+    implementation.
+A PE without the Main Extension is also referred to as a Baseline
+    implementation. A Baseline implementation has a subset of the
+    instructions, registers, and features, of a Mainline
+    implementation.
+Armv7-M compatibility requires the Main Extension.
+Armv6-M compatibility is provided by all Armv8-M implementations.
+
+So this does not have the mainline extension so it is not armv7-m
+compatible.  Basically armv6-m instructions.
+
+This CPUID matches the cortex-m22 r1p0 TRM.  So I guess the m22 is
+baseline?
+
+DSU.DID register
+20830104 matches the errata/extra document for the D15A which is correct
