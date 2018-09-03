@@ -120,7 +120,7 @@ void hexstring ( unsigned int d )
 
 int notmain ( void )
 {
-    unsigned int ra;
+    unsigned int ra;`
 
     uart_init();
 
