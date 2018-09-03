@@ -1,0 +1,8 @@
+
+Derived from uart01.  115200 8N1, generic starting point for default
+internal 4MHz clock.
+
+PA16  SERCOM1/PAD[0]  TX
+PA17  SERCOM1/PAD[1]  RX
+PA18  SERCOM1/PAD[2]
+PA19  SERCOM1/PAD[3]

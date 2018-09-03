@@ -1,26 +1,70 @@
 
 These examples are specific to the
 
-ATSAML10E16A-AU
+ATSAML10E16A-AU TQFP-32
 
-for now, will try the SSOP soon.
+ATSAML10D15A-YU SSOP-24
 
 So far there is little to no support for this part or the cortex-m23
+with respect to tools and examples other than those from the vendor.
 
 I found that openocd 0.10.0 with the configs that work on other
-cortex-ms didnt work, but openocd 0.9.0 does.
-
+cortex-ms didnt work, but openocd 0.9.0 does. (I have had issues with
+0.10.0 with other processors as well)
 
 openocd -f jlink.cfg -f target.cfg
 
+in a second window
 
 telnet localhost 4444
+
+The first thing you want to do in the telnet window
+
+halt
+mdw 0x41002018
+
+If it starts with 0x2083xxxx then it is probably a SAML11 part not
+a SAML10 part, see the other directory.  If it is a 0x2084xxxx then
+it is a SAML10 part, you are in the right place.
+
+> mdw 0x41002018
+0x41002018: 20840104
+
+The cortex-m23 can have a secure state or not.  The SAML10 does not
+the SAML11 does and boots into it.  There are some modules in the
+address space that have secure and non secure addresses, so those
+are the initial differences between the SAML10 and SAML11 examples.
+
+The SAML11 ships without the ability to run a program in SRAM. Security
+settings (chip specific solution not generic to the cortex-m23) need
+to be changed and a reset or power cycle applied.  The SAML10 does
+not have this problem we can run out of SRAM with a new part and
+no modifications.
+
+The CPUID register
+
+> mdw 0xE000ED00
+0xe000ed00: 411cd200
+
+shows this is a cortex-m23 r1p0.  It is a baseline armv8-m so supports
+all armv6-m but not all armv7-m instructions.  So until the gnu tools
+have support for the cortex-m23 we will just use cortex-m0.
+
+I have a breakout board (see the top level kicad files) with leds on
+PA15 and PA16.
+
+Run this to blink those leds
 
 halt
 load_image blinker01/blinker01.sram.elf
 resume 0x20000000
 
+This will erase the flash and put a simple does almost nothing program
+on it so we know that when we stop and run a program in ram we are
+in the post-reset state.  Clocks, etc have not been modified.
 
 halt
 load_image flash01/flash01.sram.elf
 resume 0x20000000
+
+

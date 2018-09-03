@@ -11,7 +11,7 @@ void dummy ( unsigned int );
 #define PORTBASE_NS  0x40003000
 #define PORTBASE_SEC 0x40003200
 
-#define PORTBASE PORTBASE_SEC
+#define PORTBASE PORTBASE_NS
 
 #define PORTAPMUX8  (PORTBASE+0x38)
 #define PORTAPINCFG16 (PORTBASE+0x50)

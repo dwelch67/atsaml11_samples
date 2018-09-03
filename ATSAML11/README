@@ -1,21 +1,35 @@
 
 These examples are specific to the
 
-ATSAML11E16A-AU LQFP
+ATSAML11E16A-AU TQFP-32
 
-ATSAML11D15A-AU SSOP
+ATSAML11D15A-YU SSOP-24
 
 So far there is little to no support for this part or the cortex-m23
+with respect to tools and examples other than those from the vendor.
 
 I found that openocd 0.10.0 with the configs that work on other
-cortex-ms didnt work, but openocd 0.9.0 does.
-
+cortex-ms didnt work, but openocd 0.9.0 does. (I have had issues with
+0.10.0 with other processors as well)
 
 openocd -f jlink.cfg -f target.cfg
 
 in a second window
 
 telnet localhost 4444
+
+The first thing you want to do in the telnet window
+
+halt
+mdw 0x41002018
+
+if it starts with 0x2084xxxx then it is probably a SAML10 part not
+a SAML11 part, see the other directory.  If it is a 0x2083xxxx then
+it is a SAML11 part, you are in the right place.
+
+
+
+
 
 
 
