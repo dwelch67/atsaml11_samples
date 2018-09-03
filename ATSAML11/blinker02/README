@@ -1,0 +1,5 @@
+
+PA15 and PA16 have leds on this board.
+
+systick set for 1000000 ticks.  32*1000000 ticks is 8 seconds so
+4000000 ticks per second, 4MHz.
