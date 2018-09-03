@@ -5,7 +5,7 @@ ATSAML10E16A-AU
 
 for now, will try the SSOP soon.
 
-So far there is little to no support for this part or the cortex-m22
+So far there is little to no support for this part or the cortex-m23
 
 I found that openocd 0.10.0 with the configs that work on other
 cortex-ms didnt work, but openocd 0.9.0 does.

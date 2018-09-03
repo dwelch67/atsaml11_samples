@@ -1,5 +1,5 @@
 
-So the cortex-m22 parts are now available.
+So the cortex-m23 parts are now available.
 
 At the moment binutils/gcc have not caught up so hopefully wont get
 stuck with undefined instructions.

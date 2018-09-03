@@ -5,7 +5,7 @@ ATSAML11E16A-AU LQFP
 
 ATSAML11D15A-AU SSOP
 
-So far there is little to no support for this part or the cortex-m22
+So far there is little to no support for this part or the cortex-m23
 
 I found that openocd 0.10.0 with the configs that work on other
 cortex-ms didnt work, but openocd 0.9.0 does.
@@ -321,7 +321,7 @@ Armv6-M compatibility is provided by all Armv8-M implementations.
 So this does not have the mainline extension so it is not armv7-m
 compatible.  Basically armv6-m instructions.
 
-This CPUID matches the cortex-m22 r1p0 TRM.  So I guess the m22 is
+This CPUID matches the cortex-m23 r1p0 TRM.  So I guess the m23 is
 baseline?
 
 DSU.DID register
